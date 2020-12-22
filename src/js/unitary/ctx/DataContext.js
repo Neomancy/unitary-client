@@ -12,7 +12,7 @@ define(['src/js/unitary/core/helpers'], function(helpers) {
     this._data = {};
     this._acl = {
       "owner": uuidOwner,
-      "promiscuous": {
+      "global": {
         "read": false,
         "write": false
       },
@@ -21,7 +21,7 @@ define(['src/js/unitary/core/helpers'], function(helpers) {
         "write": [ /* ids of components/libraries with access */ ],
         "permissions": [ /* ids of components/libraries able to change ACL permissions */ ]
       },
-      "global": {
+      "normal": {
         "read": [ /* ids of components/libraries with access */ ],
         "write": [ /* ids of components/libraries with access */ ]
       }
@@ -33,85 +33,120 @@ define(['src/js/unitary/core/helpers'], function(helpers) {
     });
   }
 
+  let closure_funcAdd = function(base_ref, permissions) {
+    if (Array.isArray(permissions.read)) {
+      for (let idx in permissions.read) {
+        let target_uuid = permissions.read[idx];
+        if (!base_ref.read.includes(target_uuid)) {
+          base_ref.read.push(target_uuid);
+        }
+      }
+    }
+    if (Array.isArray(permissions.write)) {
+      for (let idx in permissions.write) {
+        let target_uuid = permissions.write[idx];
+        if (!base_ref.write.includes(target_uuid)) {
+          base_ref.write.push(target_uuid);
+        }
+      }
+    }
+  };
+  let closure_funcDelete = function(base_ref, permissions) {
+    if (Array.isArray(permissions.read)) {
+      for (let idx in permissions.read) {
+        let target_uuid = permissions.read[idx];
+        if (base_ref.read.includes(target_uuid)) {
+          base_ref.read = base_ref.read.filter((uuid) => {
+            uuid != target_uuid
+          });
+        }
+      }
+    }
+    if (Array.isArray(permissions.write)) {
+      for (let idx in permissions.write) {
+        let target_uuid = permissions.write[idx];
+        if (base_ref.write.includes(target_uuid)) {
+          base_ref.write = base_ref.write.filter((uuid) => {
+            uuid != target_uuid
+          });
+        }
+      }
+    }
+  }
+
   DataContext.prototype = {
     constructor: DataContext,
-    _checkLocation: function(location, action) {
-      let parts = location.split(".");
-      let parts_index = parts.map((r) => {
-        let t = r.split("[");
-        if (t.length > 1) {
-          return parseInt(t[1].replace("]", ""));
-        } else {
-          return NaN;
-        }
-      });
-      parts = parts.map((r) => {
-        return r.split("[")[0];
-      });
-      let path = [];
-      let locs = Object.keys(this._data);
-      let found = false;
-      do {
-        let t = parts.shift();
-        path.push(t);
-        let pathkey = path.join(".");
-        if (locs.indexOf(pathkey) > -1) {
-          // found the path record
-          let ref = this._data[pathkey];
-          while (parts.length > 0 || !Number.isNaN(array_index)) {
-            // handle any array index
-            let array_index = parts_index[parts.length - 1];
-            if (!Number.isNaN(array_index)) {
-              // array requested by path object
-              if (!Array.isArray(ref)) return false;
-              if (ref[array_index] === undefined) return {found: false};
-              ref = ref[array_index]
-            }
-            // sub item by path object
-            let sub_path_key = path.shift();
-            if (ref[sub_path_key] === undefined) return {found: false};
-            ref = ref[sub_path_key];
-          }
-          // full path processed, exit
-          if (parts.length == 0) return ref;
-        }
-        // break out if it is an index and was not found
-        if (!Number.isNaN(parts_index[parts.length - 1])) break;
-      } while (false);
-      return false;
-    },
-    _checkACL: function(requester, location, action) {},
     aclElevatedAdd(requester, permissions) {
       /* expected object:
        *  {"read":[List of instance IDs], "write":[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
+      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+        closure_funcAdd(this._acl.elevated, permissions);
+        return true;
+      } else {
+        return false;
+      }
     },
     aclElevatedDelete(requester, permissions) {
       /* expected object:
        *  {"read":[List of instance IDs], "write":[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
+      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+        closure_funcDelete(this._acl.elevated, permissions);
+        return true;
+      } else {
+        return false;
+      }
     },
-    aclGlobalAdd(requester, permissions) {
+    aclNormalAdd(requester, permissions) {
       /* expected object:
        *  {"read":[List of instance IDs], "write":[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
+      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+        closure_funcAdd(this._acl.normal, permissions);
+        return true;
+      } else {
+        return false;
+      }
     },
-    aclGlobalDelete(requester, permissions) {
+    aclNormalDelete(requester, permissions) {
       /* expected object:
        *  {"read":[List of instance IDs], "write":[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
+      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+        closure_funcDelete(this._acl.normal, permissions);
+        return true;
+      } else {
+        return false;
+      }
     },
-    aclPromiscuous(requester, boolObj) {
+    aclGlobal(requester, boolObj) {
       /* expected object:
        *  {"read":True, "write":false} OR
        *  {"read":True} OR
        *  {"write":false}
        */
+      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+        if (boolObj.read !== undefined && boolObj.read == true) {
+          this._acl.global.read = true;
+        } else {
+          this._acl.global.read = false;
+        }
+        if (boolObj.write !== undefined && boolObj.write == true) {
+          this._acl.global.write = true;
+        } else {
+          this._acl.global.write = false;
+        }
+        return true;
+      } else {
+        return false;
+      }
     },
+
     get(requester, path) {},
     set(requester, path, value, acl = false ) {
       /* requester - the requester ID
@@ -206,3 +241,50 @@ define(['src/js/unitary/core/helpers'], function(helpers) {
 //
 //   curry(path) { /* returns a DataContextCurried object */}
 // }
+
+
+
+/*
+ _getLocation: function(location) {
+ let parts = location.split(".");
+ let path = [];
+ let ref = undefined;
+ while (parts.length > 0) {
+ let t = parts.shift();
+ path.push(t);
+ }
+ return {last_ref:ref, navigated:path.join("."), unnavigated:parts.join("."), found:(ref !== undefined)};
+
+ do {
+ let t = parts.shift();
+ path.push(t);
+ let pathkey = path.join(".");
+ if (locs.indexOf(pathkey) > -1) {
+ // found the path record
+ let ref = this._data[pathkey];
+ while (parts.length > 0 || !Number.isNaN(array_index)) {
+ // handle any array index
+ let array_index = parts_index[parts.length - 1];
+ if (!Number.isNaN(array_index)) {
+ // array requested by path object
+ if (!Array.isArray(ref)) return false;
+ if (ref[array_index] === undefined) return {found: false};
+ ref = ref[array_index]
+ }
+ // sub item by path object
+ let sub_path_key = path.shift();
+ if (ref[sub_path_key] === undefined) return {found: false};
+ ref = ref[sub_path_key];
+ }
+ // full path processed, exit
+ if (parts.length == 0) return ref;
+ }
+ // break out if it is an index and was not found
+ if (!Number.isNaN(parts_index[parts.length - 1])) break;
+ } while (false);
+ return false;
+ },
+ _checkACL: function(requester, location, action) {
+ return false;
+ },
+ */
