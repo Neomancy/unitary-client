@@ -2,17 +2,17 @@
  * Created by nbeni on 11/22/2020.
  */
 
-describe('[Helper functions ]', () => {
-  describe('[generateID() ]', () => {
+describe('[Helper functions]', () => {
+  describe('.generateID()', () => {
     it('function exists', (done) => {
-      require(['src/js/unitary/core/helpers'], function(helpers) {
+      require(['src/js/unitary/core/Helpers'], function(helpers) {
         expect(helpers).toBeDefined();
         expect(typeof helpers.generateID).toMatch('function');
         done();
       });
     });
     it('cryptographically secure generation', (done) => {
-      require(['src/js/unitary/core/helpers'], function(helpers) {
+      require(['src/js/unitary/core/Helpers'], function(helpers) {
         let promises = [];
         promises.push(helpers.generateID());
         promises.push(helpers.generateID());

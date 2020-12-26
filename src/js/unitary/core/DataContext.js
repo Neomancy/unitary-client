@@ -2,7 +2,7 @@
  * Created by nbeni on 11/19/2020.
  */
 
-define(['src/js/unitary/core/helpers'], function(helpers) {
+define(['src/js/unitary/core/Helpers'], function(helpers) {
   "use strict";
 
   function DataContext(uuidOwner) {

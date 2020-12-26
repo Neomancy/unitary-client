@@ -17,4 +17,4 @@ define([], function() {
 
   return helper;
 
-})
+});

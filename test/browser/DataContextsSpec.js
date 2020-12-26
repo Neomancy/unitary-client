@@ -6,7 +6,7 @@ describe("[DataContext functionality]", () => {
 
   describe("[Object creation & defaults]", () => {
     it('constructor exists', (done) => {
-      require(['src/js/unitary/ctx/DataContext'], function(dctx) {
+      require(['src/js/unitary/core/DataContext'], function(dctx) {
         expect(dctx).toBeDefined();
         let test = new dctx.DataContext();
         expect(test).toBeInstanceOf(dctx.DataContext);
@@ -15,7 +15,7 @@ describe("[DataContext functionality]", () => {
     });
 
     it('owner_id is correctly set', (done) => {
-      require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
         let owner = helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.owner).toEqual(owner);
@@ -25,7 +25,7 @@ describe("[DataContext functionality]", () => {
 
     // ### Defaults ###
     it('default elevated read=[]', (done) => {
-      require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
         let owner = helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.elevated.read).toEqual([]);
@@ -33,7 +33,7 @@ describe("[DataContext functionality]", () => {
       })(dctx, helpers)});
     });
     it('default elevated write=[]', (done) => {
-      require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
         let owner = helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.elevated.write).toEqual([]);
@@ -41,7 +41,7 @@ describe("[DataContext functionality]", () => {
       })(dctx, helpers)});
     });
     it('default normal read=[]', (done) => {
-      require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
         let owner = helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.normal.read).toEqual([]);
@@ -49,15 +49,15 @@ describe("[DataContext functionality]", () => {
       })(dctx, helpers)});
     });
     it('default normal write=[]', (done) => {
-      require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
-        let owner = helpers.generateID();
+      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        let owner = await helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.normal.write).toEqual([]);
         done();
       })(dctx, helpers)});
     });
     it('default globals read=false', (done) => {
-      require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
         let owner = helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.global.read).toBe(false);
@@ -65,7 +65,7 @@ describe("[DataContext functionality]", () => {
       })(dctx, helpers)});
     });
     it('default globals write=false', (done) => {
-      require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
         let owner = helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.global.write).toBe(false);
@@ -79,7 +79,7 @@ describe("[DataContext functionality]", () => {
     describe("Elevated-level modifications", () => {
       // ### Elevate Read ###
       it('owner elevated read add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -89,7 +89,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('owner elevated read delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = await helpers.generateID();
           let mod_uuid = await helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -100,7 +100,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid elevated read add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
@@ -112,7 +112,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid elevated read delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
@@ -125,7 +125,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid elevated read add fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -138,7 +138,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid elevated read delete fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -153,7 +153,7 @@ describe("[DataContext functionality]", () => {
       });
       // ### Elevate Write ###
       it('owner elevated write add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -163,7 +163,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('owner elevated write delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -174,8 +174,8 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid elevated write add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
-          let owner = helpers.generateID();
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+          let owner = await helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -186,7 +186,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid elevated write delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
@@ -199,7 +199,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid elevated write add fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -212,7 +212,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid elevated write delete fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -230,7 +230,7 @@ describe("[DataContext functionality]", () => {
     describe("Normal-level modifications", () => {
       // ### Normal Read ###
       it('owner normal read add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -240,7 +240,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('owner normal read delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -251,7 +251,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid normal read add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
@@ -263,7 +263,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid normal read delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
@@ -276,7 +276,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid normal read add fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -289,7 +289,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid normal read delete fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -304,7 +304,7 @@ describe("[DataContext functionality]", () => {
       });
       // ### Normal Write ###
       it('owner normal write add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -314,7 +314,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('owner normal write delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let mod_uuid = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -325,7 +325,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid normal write add success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
@@ -337,7 +337,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid normal write delete success', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let mod_uuid = helpers.generateID();
@@ -350,7 +350,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid normal write add fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -363,7 +363,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid normal write delete fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -382,7 +382,7 @@ describe("[DataContext functionality]", () => {
     describe("Global-level modifications", () => {
       // ### Globals Read
       it('owner global read=true succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
           expect(test_ctx.aclGlobal(owner, {"read": true})).toEqual(true);
@@ -391,7 +391,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('owner global read=false succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
           test_ctx._acl.global.read = true;
@@ -401,7 +401,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid global read=true succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -412,7 +412,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid global read=false succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -424,7 +424,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid global read=true fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -436,7 +436,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid global read=false fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -450,7 +450,7 @@ describe("[DataContext functionality]", () => {
       });
       // ### Globals Write
       it('owner global write=true succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
           expect(test_ctx.aclGlobal(owner, {"write": true})).toEqual(true);
@@ -459,7 +459,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('owner global write=false succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
           test_ctx._acl.global.write = true;
@@ -469,7 +469,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid global write=true succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -480,7 +480,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('permitted-uuid global write=false succeed', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let test_ctx = new dctx.DataContext(owner);
@@ -492,7 +492,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid global write=true fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
@@ -504,7 +504,7 @@ describe("[DataContext functionality]", () => {
         })(dctx, helpers)});
       });
       it('unpermitted-uuid global write=false fail', (done) => {
-        require(['src/js/unitary/ctx/DataContext', 'src/js/unitary/core/helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+        require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
           let owner = helpers.generateID();
           let permitted = helpers.generateID();
           let unpermitted = helpers.generateID();
