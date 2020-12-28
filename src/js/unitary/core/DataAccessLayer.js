@@ -1,6 +1,6 @@
 
 class DataAccessLayer {
-  this._data = {};
+//  this._data = {};
   dataContextAdd(appId, context) {}
   datacontextDelete(appId, context) {}
 

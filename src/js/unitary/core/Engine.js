@@ -3,9 +3,10 @@
  */
 
 define([
-  'src/js/unitary/core/Helpers',
-  'src/js/unitary/core/ComponentMgr'
-], function(helpers, CompMgrFactory) {
+  "src/js/unitary/core/Helpers",
+  "src/js/unitary/core/ComponentMgr",
+  "src/js/unitary/core/EventBus"
+], function(helpers, CompMgrFactory, EventBusFactory) {
   Unitary =  {
     helpers: {},
     XXXcomponents: {
@@ -31,10 +32,10 @@ define([
 
 
         // create the sandboxed iframe and append to the target DOM node
-        let iframe = document.createElement('iframe');
-        iframe.setAttribute('id', 'my-test-iframe');
-        iframe.setAttribute('sandbox', 'allow-scripts');
-        iframe.setAttribute('src', widget_url+'#'+btoa(instance_id));
+        let iframe = document.createElement("iframe");
+        iframe.setAttribute("id", "my-test-iframe");
+        iframe.setAttribute("sandbox", "allow-scripts");
+        iframe.setAttribute("src", widget_url+"#"+btoa(instance_id));
         container_el.appendChild(iframe);
         return instance_id;
       },
@@ -91,12 +92,15 @@ define([
   };
 
   // build the Unitary namespace
-  Unitary.helpers = helpers;
-  Unitary.components = CompMgrFactory();
+  Unitary = {
+    helpers: helpers,
+    events: EventBusFactory(),
+    components: CompMgrFactory(Unitary.events)
+  };
 
   // *******************************************************************
   // Sterilize any debug functionality that may exist on the modules
-  // (depends on a special "debug" value in sessionStorage being true
+  // (depends on a special "debug" value in sessionStorage being true)
   // *******************************************************************
   if (window.sessionStorage.getItem("debug") !== true) {
     for (let module in Unitary) {
@@ -105,8 +109,6 @@ define([
   }
 
   // fire the framework loaded event
-  window.postMessage({family:'mgnt', msg:'FRAMEWORK_LOADED', data: {}});
-
-
+  window.postMessage({header: {type:"MGNT", broadcast:"FRAMEWORK"}, msg:"FRAMEWORK_LOADED", data: {}});
   return Object.assign({}, Unitary, {"name":"UnitaryDesktop"});
 });

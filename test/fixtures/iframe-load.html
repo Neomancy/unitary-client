@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Empty Widget</title>
+</head>
+<body>
+<script type="application/javascript" src="iframe-load-js.js" />
+
+<script type="application/javascript">
+  window.parent.postMessage({header: {family:"MGMT", to:"ComponentMgr"}, msg:"READY"}, "*");
+</script>
+<div id="my-target-div"></div>
+</body>
+</html>

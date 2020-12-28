@@ -6,14 +6,16 @@ let GLOBAL_CompMgrFtry = null;
 
 describe("[ComponentMgr]", () => {
   beforeAll(function(done){
-    require(['src/js/unitary/core/ComponentMgr'], function(comp_mgr_factory) {
+    require(["src/js/unitary/core/ComponentMgr", "src/js/unitary/core/EventBus"], function(comp_mgr_factory, event_bus_factory) {
       GLOBAL_CompMgrFtry = comp_mgr_factory;
+      GLOBAL_EventBusFtry = event_bus_factory;
       done();
     });
   });
 
-  it('Registers a valid component definition', (done) => {
-    let local_CompMgr = GLOBAL_CompMgrFtry();
+  it("Registers a valid component definition", (done) => {
+    let local_EventBus = GLOBAL_EventBusFtry(window);
+    let local_CompMgr = GLOBAL_CompMgrFtry(local_EventBus);
     let success = local_CompMgr.RegisterComponent({
       id: "my-test-component",
       title: "my title"
@@ -22,16 +24,18 @@ describe("[ComponentMgr]", () => {
     done();
   });
 
-  it('Fails registration of component with invalid definition', (done) => {
-    let local_CompMgr = GLOBAL_CompMgrFtry();
+  it("Fails registration of component with invalid definition", (done) => {
+    let local_EventBus = GLOBAL_EventBusFtry(window);
+    let local_CompMgr = GLOBAL_CompMgrFtry(local_EventBus);
     expect(() => {
       local_CompMgr.RegisterComponent({});
     }).toThrowError("ComponentMgr.RegisterComponent: ID is not set");
     done();
   });
 
-  it('.listComponents()', (done) => {
-    let local_CompMgr = GLOBAL_CompMgrFtry();
+  it(".listComponents()", (done) => {
+    let local_EventBus = GLOBAL_EventBusFtry(window);
+    let local_CompMgr = GLOBAL_CompMgrFtry(local_EventBus);
     local_CompMgr.RegisterComponent({id: "my-test-component1"});
     local_CompMgr.RegisterComponent({id: "my-test-component2"});
 
@@ -43,8 +47,9 @@ describe("[ComponentMgr]", () => {
     done();
   });
 
-  it('.getComponent()', (done) => {
-    let local_CompMgr = GLOBAL_CompMgrFtry();
+  it(".getComponent()", (done) => {
+    let local_EventBus = GLOBAL_EventBusFtry(window);
+    let local_CompMgr = GLOBAL_CompMgrFtry(local_EventBus);
     local_CompMgr.RegisterComponent({id: "my-test-component1", name:"test1"});
     local_CompMgr.RegisterComponent({id: "my-test-component2", name:"test2"});
     local_CompMgr.RegisterComponent({id: "my-test-component3", name:"test3"});
@@ -56,8 +61,10 @@ describe("[ComponentMgr]", () => {
   });
 
 
-  it('.CreateWidgetInstance() creates an iframe', async (done) => {
-    let local_CompMgr = GLOBAL_CompMgrFtry();
+  it(".CreateWidgetInstance() creates an iframe", async (done) => {
+    let local_EventBus = GLOBAL_EventBusFtry(window);
+    let spyEventBus = spyOn(local_EventBus, 'MonitorWidget');
+    let local_CompMgr = GLOBAL_CompMgrFtry(local_EventBus);
     let c_iframe_window = null;
     local_CompMgr.RegisterComponent({
       id: "my-test-widget",
@@ -82,11 +89,18 @@ describe("[ComponentMgr]", () => {
     });
 
     let component = await local_CompMgr.CreateWidgetInstance("my-test-widget", trgt_el, "");
+    console.warn(new Int32Array(component));
     expect(component).toBeInstanceOf(ArrayBuffer);
     expect(trgt_el.childElementCount).toEqual(1);
     let iframe_ref = trgt_el.childNodes[0];
     c_iframe_window = iframe_ref.contentWindow;
     expect(iframe_ref.tagName).toEqual("IFRAME");
+
+    // make sure the EventBus was notified to monitor iframe for events
+    expect(local_EventBus.MonitorWidget).toHaveBeenCalled();
+    let temp = local_EventBus.MonitorWidget.calls.argsFor(0);
+    expect(temp[0] === c_iframe_window).toBeTrue();
+    expect(temp[1] === component).toBeTrue();
   });
 
 

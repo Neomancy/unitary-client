@@ -155,8 +155,8 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
        * acl - object {"read":"pge", write:"e"}
        *     - where Promiscuous
        * */
-
-      this._data
+      // this._data
+      return null;
     },
     delete(requester, path) {},
     curryPath(path) { /* returns a DataContextCurried object */}

@@ -5,7 +5,7 @@
 define(function() {
   "use strict";
 
-  CtxMgr = {
+  let CtxMgr = {
     "data": {},
     "exec": {}
   };

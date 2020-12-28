@@ -4,7 +4,10 @@
 define([], function() {
   let helper = {};
 
-  async function generateID() {
+  helper.generateID = async function generateID() {
+    // Framework was designed assuming this function
+    // is cryptographically secure to protect
+    // against possible collision attacks
     let str = Date() + Math.random();
     let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
     let bufView = new Uint16Array(buf);
@@ -13,7 +16,21 @@ define([], function() {
     }
     return await crypto.subtle.digest("SHA-512", bufView);
   };
-  helper.generateID =  generateID;
+
+  helper.ID2String = function (id_array) {
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(id_array))).replaceAll("=","").replaceAll("/","-")
+  };
+
+  helper.String2ID = function (id_string) {
+    let temp = id_string.replaceAll("-", "/");
+    temp = atob(temp + "=".repeat(4 - (id_string.length % 4)));
+    let bytes = new Uint8Array(temp.length);
+    let len = bytes.length;
+    for (let i=0; i<len; i++) {
+      bytes[i] = temp.charCodeAt(i);
+    }
+    return bytes.buffer;
+  };
 
   return helper;
 

@@ -5,8 +5,8 @@ describe("[DataContext functionality]", () => {
 
 
   describe("[Object creation & defaults]", () => {
-    it('constructor exists', (done) => {
-      require(['src/js/unitary/core/DataContext'], function(dctx) {
+    it("constructor exists", (done) => {
+      require(["src/js/unitary/core/DataContext"], function(dctx) {
         expect(dctx).toBeDefined();
         let test = new dctx.DataContext();
         expect(test).toBeInstanceOf(dctx.DataContext);
@@ -14,8 +14,8 @@ describe("[DataContext functionality]", () => {
       });
     });
 
-    it('owner_id is correctly set', (done) => {
-      require(['src/js/unitary/core/DataContext', 'src/js/unitary/core/Helpers'], (dctx, helpers) => {(async function(dctx, helpers) {
+    it("owner_id is correctly set", (done) => {
+      require(["src/js/unitary/core/DataContext", "src/js/unitary/core/Helpers"], (dctx, helpers) => {(async function(dctx, helpers) {
         let owner = helpers.generateID();
         let test_ctx = new dctx.DataContext(owner);
         expect(test_ctx._acl.owner).toEqual(owner);

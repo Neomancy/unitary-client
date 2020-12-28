@@ -2,11 +2,12 @@
  * Created by nbeni on 12/24/2020.
  */
 
-define(['src/js/unitary/core/Helpers'], function(helpers) {
-  return function() {
+define(["src/js/unitary/core/Helpers", "src/js/unitary/core/EventBus"], function(helpers, EventBus) {
+  return function(EventBusInstance) {
     let ComponentMgr = {};
     let c_Components = {};
     let c_Instances = {};
+    let c_EventBus = EventBusInstance;
 
     ComponentMgr.name = "ComponentMgr";  // used by the logger subsystem
 
@@ -74,30 +75,31 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
 
       let instance_id = await helpers.generateID();
       // clone and fill in unspecified default values and save result to closure storage
-      c_Components[component_info.id] = Object.assign({
+      // TODO: make this assignment be more specific in copying over info from the component record
+      c_Instances[instance_id] = Object.assign({}, component_info, {
           type: component_id,
-          target_el: container_el,
           isWidget: true,
-          exec_ctx: exec_context,
-          name: "unnamed"
-        }, component_info
-      );
+          loaded: false,
+          target_el: container_el,
+          exec_ctx: exec_context
+      });
 
       // create the sandboxed iframe and append to the target DOM node
-      let iframe = document.createElement('iframe');
-      iframe.setAttribute('id', 'my-test-iframe');
-      iframe.setAttribute('sandbox', 'allow-scripts');
-      iframe.setAttribute('src', component_info.url+'#'+btoa(instance_id));
+      let iframe = document.createElement("iframe");
+      iframe.setAttribute("id", "my-test-iframe");
+      iframe.setAttribute("sandbox", "allow-scripts");
+      iframe.setAttribute("src", component_info.url);
       container_el.appendChild(iframe);
+      c_Instances[instance_id].src_window = iframe.contentWindow;
 
       // register the component with the EventBus
-
+      c_EventBus.MonitorWidget(c_Instances[instance_id].src_window, instance_id);
 
       return instance_id;
     };
 
     ComponentMgr.CreateLibraryInstance = function(component_id, exec_context) {
-
+      // TODO: Create a webworker and load the library with it
     };
 
 
