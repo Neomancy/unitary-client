@@ -1,15 +1,21 @@
+'use strict';
 /**
  * Created by nbeni on 12/24/2020.
+ * This code exists within the main window.
  */
 
-define(["src/js/unitary/core/Helpers", "src/js/unitary/core/EventBus"], function(helpers, EventBus) {
+define([
+  'unitary/core/Helpers',
+  'unitary/core/EventBus'
+], function(helpers, EventBus) {
+
   return function(EventBusInstance) {
     let ComponentMgr = {};
     let c_Components = {};
     let c_Instances = {};
     let c_EventBus = EventBusInstance;
 
-    ComponentMgr.name = "ComponentMgr";  // used by the logger subsystem
+    ComponentMgr.name = 'ComponentMgr';  // used by the logger subsystem
 
     ComponentMgr.debug = function() {
       ComponentMgr.debug = {
@@ -48,15 +54,15 @@ define(["src/js/unitary/core/Helpers", "src/js/unitary/core/EventBus"], function
 
     ComponentMgr.RegisterComponent = function(component_info) {
       if (component_info.id === undefined) {
-        throw new Error("ComponentMgr.RegisterComponent: ID is not set");
+        throw new Error('ComponentMgr.RegisterComponent: ID is not set');
       }
       // clone and fill in unspecified default values
       c_Components[component_info.id] = Object.assign({
           isWidget: false,
           isLibrary: false,
           isInitialized: false,
-          name: "unnamed",
-          tabTitle: "unnamed tab",
+          name: 'unnamed',
+          tabTitle: 'unnamed tab',
           tabDesc: false,
           singleton: false
         }, component_info
@@ -66,14 +72,14 @@ define(["src/js/unitary/core/Helpers", "src/js/unitary/core/EventBus"], function
 
     ComponentMgr.CreateWidgetInstance = async function(component_id, container_el, exec_context) {
       if (component_id === undefined || !(container_el instanceof HTMLElement)) {
-        throw new Error("ComponentMgr.CreateWidgetInstance: Bad or missing component_id or container_el!");
+        throw new Error('ComponentMgr.CreateWidgetInstance: Bad or missing component_id or container_el!');
       }
       let component_info = ComponentMgr.getComponent(component_id);
-      if (component_info === undefined) throw new Error("ComponentMgr.CreateWidgetInstance: Component_id is invalid");
-      if (component_info.isWidget === false) throw new Error("ComponentMgr.CreateWidgetInstance: Component_id is not of widget type");
+      if (component_info === undefined) throw new Error('ComponentMgr.CreateWidgetInstance: Component_id is invalid');
+      if (component_info.isWidget === false) throw new Error('ComponentMgr.CreateWidgetInstance: Component_id is not of widget type');
       // TODO: see if widget is a singleton that is already instanciated, return that instance if so
 
-      let instance_id = await helpers.generateID();
+      let instance_id = helpers.ID2String(await helpers.generateID());
       // clone and fill in unspecified default values and save result to closure storage
       // TODO: make this assignment be more specific in copying over info from the component record
       c_Instances[instance_id] = Object.assign({}, component_info, {
@@ -85,15 +91,15 @@ define(["src/js/unitary/core/Helpers", "src/js/unitary/core/EventBus"], function
       });
 
       // create the sandboxed iframe and append to the target DOM node
-      let iframe = document.createElement("iframe");
-      iframe.setAttribute("id", "my-test-iframe");
-      iframe.setAttribute("sandbox", "allow-scripts");
-      iframe.setAttribute("src", component_info.url);
+      let iframe = document.createElement('iframe');
+      iframe.setAttribute('id', instance_id);
+      iframe.setAttribute('sandbox', 'allow-scripts');
+      iframe.setAttribute('src', component_info.url);
       container_el.appendChild(iframe);
       c_Instances[instance_id].src_window = iframe.contentWindow;
 
       // register the component with the EventBus
-      c_EventBus.MonitorWidget(c_Instances[instance_id].src_window, instance_id);
+      c_EventBus.RegisterSource(c_Instances[instance_id].src_window, instance_id);
 
       return instance_id;
     };

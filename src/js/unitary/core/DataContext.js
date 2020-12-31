@@ -1,35 +1,38 @@
+'use strict';
 /**
  * Created by nbeni on 11/19/2020.
+ * This code exists within the main window with access provided by
  */
 
-define(['src/js/unitary/core/Helpers'], function(helpers) {
-  "use strict";
+define([
+  'unitary/core/Helpers'
+], function(helpers) {
 
   function DataContext(uuidOwner) {
     if (!(this instanceof DataContext)) {
-      throw new TypeError("DataContext constructor cannot be called as a function");
+      throw new TypeError('DataContext constructor cannot be called as a function');
     }
     this._data = {};
     this._acl = {
-      "owner": uuidOwner,
-      "global": {
-        "read": false,
-        "write": false
+      'owner': uuidOwner,
+      'global': {
+        'read': false,
+        'write': false
       },
-      "elevated": {
-        "read": [ /* ids of components/libraries with access */ ],
-        "write": [ /* ids of components/libraries with access */ ],
-        "permissions": [ /* ids of components/libraries able to change ACL permissions */ ]
+      'elevated': {
+        'read': [ /* ids of components/libraries with access */ ],
+        'write': [ /* ids of components/libraries with access */ ],
+        'permissions': [ /* ids of components/libraries able to change ACL permissions */ ]
       },
-      "normal": {
-        "read": [ /* ids of components/libraries with access */ ],
-        "write": [ /* ids of components/libraries with access */ ]
+      'normal': {
+        'read': [ /* ids of components/libraries with access */ ],
+        'write': [ /* ids of components/libraries with access */ ]
       }
     };
 
     // create a unique and cryptographically secure ID
     helpers.generateID().then((uuid)=>{
-      this.uuidContext = uuid;
+      this.uuidContext = helpers.ID2String(uuid);
     });
   }
 
@@ -78,7 +81,7 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
     constructor: DataContext,
     aclElevatedAdd(requester, permissions) {
       /* expected object:
-       *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+       *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
       if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
@@ -90,7 +93,7 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
     },
     aclElevatedDelete(requester, permissions) {
       /* expected object:
-       *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+       *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
       if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
@@ -102,7 +105,7 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
     },
     aclNormalAdd(requester, permissions) {
       /* expected object:
-       *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+       *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
       if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
@@ -114,7 +117,7 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
     },
     aclNormalDelete(requester, permissions) {
       /* expected object:
-       *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+       *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
       if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
@@ -126,9 +129,9 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
     },
     aclGlobal(requester, boolObj) {
       /* expected object:
-       *  {"read":True, "write":false} OR
-       *  {"read":True} OR
-       *  {"write":false}
+       *  {'read':True, 'write':false} OR
+       *  {'read':True} OR
+       *  {'write':false}
        */
       if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
         if (boolObj.read !== undefined && boolObj.read == true) {
@@ -152,7 +155,7 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
       /* requester - the requester ID
        * path - the path for the variable of interest
        * value - what to set the variable of interest to
-       * acl - object {"read":"pge", write:"e"}
+       * acl - object {'read':'pge', write:'e'}
        *     - where Promiscuous
        * */
       // this._data
@@ -164,7 +167,7 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
   };
 
   return {
-    "DataContext": DataContext
+    'DataContext': DataContext
   };
 });
 
@@ -174,19 +177,19 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
 //   #ctx_id;
 //   constructor(uuidOwner, funcUUID) {
 //     this.#acl = {
-//       "owner": uuidOwner,
-//       "promiscuous": {
-//         "read": false,
-//         "write": false
+//       'owner': uuidOwner,
+//       'promiscuous': {
+//         'read': false,
+//         'write': false
 //       },
-//       "elevated": {
-//         "read": [ /* ids of components/libraries with access */ ],
-//         "write": [ /* ids of components/libraries with access */ ],
-//         "permissions": [ /* ids of components/libraries able to change ACL permissions */ ]
+//       'elevated': {
+//         'read': [ /* ids of components/libraries with access */ ],
+//         'write': [ /* ids of components/libraries with access */ ],
+//         'permissions': [ /* ids of components/libraries able to change ACL permissions */ ]
 //       },
-//       "global": {
-//         "read": [ /* ids of components/libraries with access */ ],
-//         "write": [ /* ids of components/libraries with access */ ]
+//       'global': {
+//         'read': [ /* ids of components/libraries with access */ ],
+//         'write': [ /* ids of components/libraries with access */ ]
 //       }
 //     };
 //
@@ -196,33 +199,33 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
 //
 //   aclElevatedAdd(requester, permissions) {
 //     /* expected object:
-//      *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
 //   aclElevatedDelete(requester, permissions) {
 //     /* expected object:
-//      *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
 //   aclGlobalAdd(requester, permissions) {
 //     /* expected object:
-//      *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
 //   aclGlobalDelete(requester, permissions) {
 //     /* expected object:
-//      *  {"read":[List of instance IDs], "write":[List of instance IDs]}
+//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
 //   aclPromiscuous(requester, boolObj) {
 //     /* expected object:
-//      *  {"read":True, "write":false} OR
-//      *  {"read":True} OR
-//      *  {"write":false}
+//      *  {'read':True, 'write':false} OR
+//      *  {'read':True} OR
+//      *  {'write':false}
 //      */
 //   }
 //
@@ -232,7 +235,7 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
 //     /* requester - the requester ID
 //      * path - the path for the variable of interest
 //      * value - what to set the variable of interest to
-//      * acl - object {"read":"pge", write:"e"}
+//      * acl - object {'read':'pge', write:'e'}
 //      *     - where Promiscuous
 //      * */
 //   }
@@ -246,19 +249,19 @@ define(['src/js/unitary/core/Helpers'], function(helpers) {
 
 /*
  _getLocation: function(location) {
- let parts = location.split(".");
+ let parts = location.split('.');
  let path = [];
  let ref = undefined;
  while (parts.length > 0) {
  let t = parts.shift();
  path.push(t);
  }
- return {last_ref:ref, navigated:path.join("."), unnavigated:parts.join("."), found:(ref !== undefined)};
+ return {last_ref:ref, navigated:path.join('.'), unnavigated:parts.join('.'), found:(ref !== undefined)};
 
  do {
  let t = parts.shift();
  path.push(t);
- let pathkey = path.join(".");
+ let pathkey = path.join('.');
  if (locs.indexOf(pathkey) > -1) {
  // found the path record
  let ref = this._data[pathkey];

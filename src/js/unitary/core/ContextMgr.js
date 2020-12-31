@@ -1,13 +1,14 @@
+'use strict';
 /**
  * Created by nbeni on 12/6/2020.
+ * This code exists within the main window.
  */
 
 define(function() {
-  "use strict";
 
   let CtxMgr = {
-    "data": {},
-    "exec": {}
+    'data': {},
+    'exec': {}
   };
 
   CtxMgr.data._ctx = {};

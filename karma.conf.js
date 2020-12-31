@@ -5,28 +5,29 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: "",
 
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine-jquery', 'jasmine', 'requirejs'],
+    frameworks: ["jasmine-jquery", "jasmine", "requirejs"],
 
     plugins: [
-      'karma-chrome-launcher',
-      'karma-jasmine',
-      'karma-coverage',
-      'karma-jasmine-jquery',
-      'karma-jasmine',
-      'karma-requirejs'],
+      "karma-chrome-launcher",
+      "karma-jasmine",
+      "karma-coverage",
+      "karma-jasmine-jquery",
+      "karma-jasmine",
+      "karma-requirejs"],
 
     // list of files / patterns to load in the browser
     files: [
-      'test-main.js',
-      { pattern: 'src/js/unitary/**/*.js', included: false },
-      { pattern: 'test/*Spec.js', included: false },
-      { pattern: 'test/**/*Spec.js', included: false },
-      { pattern: 'test/fixtures/*.*', included: false, served: true }
+      "test/test-main.js",
+      { pattern: "src/js/unitary/**/*.js", included: false },
+      { pattern: "test/*Spec.js", included: false },
+      { pattern: "test/**/*Spec.js", included: false },
+      { pattern: "test/fixtures/*.*", included: false, served: true },
+      { pattern: "dist/lib/**/*.js", included: false, served: true }
     ],
 
 
@@ -38,15 +39,19 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/*.js': []
+      '**/*.js': ['coverage'],
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ["progress", "coverage"],
 
+    coverageReporter: {
+      type: "html",
+      dir: "test/reports/coverage"
+    },
 
     // web server port
     port: 9876,
@@ -67,7 +72,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ["Chrome"],
 
 
     // Continuous Integration mode
@@ -76,6 +81,10 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
+
+    // Run specs in semi-random order
+    "random": false
+
   })
 }

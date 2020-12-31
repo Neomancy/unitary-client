@@ -1,3 +1,4 @@
+'use strict';
 
 class DataAccessLayer {
 //  this._data = {};

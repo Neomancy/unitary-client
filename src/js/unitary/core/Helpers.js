@@ -1,6 +1,9 @@
+'use strict';
 /**
  * Created by nbeni on 11/19/2020.
+ * This code can exist anywhere.
  */
+
 define([], function() {
   let helper = {};
 
@@ -14,16 +17,16 @@ define([], function() {
     for (var i = 0, strLen = str.length; i < strLen; i++) {
       bufView[i] = str.charCodeAt(i);
     }
-    return await crypto.subtle.digest("SHA-512", bufView);
+    return await crypto.subtle.digest('SHA-512', bufView);
   };
 
   helper.ID2String = function (id_array) {
-    return btoa(String.fromCharCode.apply(null, new Uint8Array(id_array))).replaceAll("=","").replaceAll("/","-")
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(id_array))).replaceAll('=','').replaceAll('/','-')
   };
 
   helper.String2ID = function (id_string) {
-    let temp = id_string.replaceAll("-", "/");
-    temp = atob(temp + "=".repeat(4 - (id_string.length % 4)));
+    let temp = id_string.replaceAll('-', '/');
+    temp = atob(temp + '='.repeat(4 - (id_string.length % 4)));
     let bytes = new Uint8Array(temp.length);
     let len = bytes.length;
     for (let i=0; i<len; i++) {
