@@ -3,6 +3,7 @@
  */
 
 let GLOBAL_CompMgrFtry = null;
+let GLOBAL_EventBusFtry = null;
 
 describe('[ComponentMgr]', () => {
   beforeAll(function(done){
@@ -40,7 +41,6 @@ describe('[ComponentMgr]', () => {
     local_CompMgr.RegisterComponent({id: 'my-test-component2'});
 
     let list = local_CompMgr.listComponents();
-    console.log(list);
     expect(list.length).toBe(2);
     expect(list).toContain('my-test-component1');
     expect(list).toContain('my-test-component2');
@@ -81,7 +81,6 @@ describe('[ComponentMgr]', () => {
 
     window.addEventListener('message', (event) => {
       if (event.source === c_iframe_window) {
-        console.log('got message');
         // this is message from our window
         expect(event.data.msg).toEqual('READY');
         done();
@@ -89,7 +88,6 @@ describe('[ComponentMgr]', () => {
     });
 
     let component = await local_CompMgr.CreateWidgetInstance('my-test-widget', trgt_el, '');
-    console.warn(component);
     expect(component).toBeInstanceOf(String);
     expect(trgt_el.childElementCount).toEqual(1);
     let iframe_ref = trgt_el.childNodes[0];

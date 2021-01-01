@@ -35,7 +35,7 @@ define([
     c_SourceInstances['FRAMEWORK'] = c_window_reference;
     // -------------------- <Event Listener> --------------------
     c_window_reference.addEventListener('message', (event) => {
-      console.log(JSON.stringify(event.data));
+//      console.log(JSON.stringify(event.data));
 
       let sender_info = null;
       // find the source window of the event
@@ -48,7 +48,7 @@ define([
       // address if the event came from an unregistered source
       if (sender_info === null && event.source !== c_window_reference) {
         // log message from unregistered senders as a security violation
-        console.dir(helpers.ID2String(sender_info));
+        console.dir(sender_info);
         console.warn('Log/report message from unregistered source!');
         return null;
       }
@@ -84,7 +84,7 @@ define([
         // see if the transaction exists already in store, if not then add it
       }
 
-      if msg_object.header
+      if (msg_object.header.from === "APP") console.warn("process message from APP")
       // -------------------- </Event Listener> --------------------
     });
 
@@ -149,49 +149,6 @@ define([
       });
       return send_promise;
     };
-
-    // EventBus.sendTransaction = (packet, timeout) => {
-    //   // sends a first message and awaits the return message
-    //   const transaction_promise = new Promise(async (resolve, reject) => {
-    //     // handle timeout if set
-    //     if (timeout !== undefined) {
-    //       const timout_ref = setTimeout(() => {
-    //         reject({status:'ERROR', message:'Message timeout'});
-    //       }, timeout);
-    //     }
-    //
-    //     // find the destination
-    //     let dest_info = c_funcGetDestination(packet);
-    //     if (dest_info === null) {
-    //       reject({status:'ERROR', message:'No or invalid Broadcast/To address specified!'});
-    //       return false;
-    //     }
-    //
-    //     // TODO: REGISTER MESSAGE AND ITS PROMISE HANDLERS
-    //     let txid = helpers.ID2String(await helpers.generateID());
-    //     packet.header['transaction'] = txid;
-    //     c_TransactionMsgs[txid] = {
-    //       request: packet,
-    //       response: null,
-    //       sent: Date.now(),
-    //       recieved: null,
-    //       promise: {
-    //         resolve: resolve,
-    //         reject: reject
-    //       }
-    //     };
-    //
-    //     // SEND MESSAGE(s)
-    //     for (let dest_idx in dest_info) {
-    //       let source_rec = c_SourceInstances[dest_info[dest_idx]];
-    //       if (source_rec !== undefined && source_rec.source_ref !== undefined) {
-    //         source_rec.source_ref.postMessage(packet);
-    //       }
-    //     }
-    //
-    //   });
-    //   return transaction_promise;
-    // };
 
     return EventBus;
   }

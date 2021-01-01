@@ -1,0 +1,12 @@
+{
+  "app": {
+    "name": "Demo App",
+    "title": "My Demo App",
+    "url": "/base/test/fixtures/app.js"
+  },
+  "widgets": [
+  ],
+  "libraries": [
+  ]
+
+}

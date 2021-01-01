@@ -101,6 +101,12 @@ define([
       // register the component with the EventBus
       c_EventBus.RegisterSource(c_Instances[instance_id].src_window, instance_id);
 
+      // TODO: Confirm this... used to load the scripts in the Component's sandbox
+      let scripts = [
+        require.toUrl("unitary/stub/ComponentStub"),
+        require.toUrl("require")
+      ];
+
       return instance_id;
     };
 

@@ -8,8 +8,9 @@ define([
   'unitary/core/Helpers',
   'unitary/core/EventBus',
   'unitary/core/ComponentMgr',
-  'unitary/core/ApplicationMgr'
-], function(helpers, EventBusFactory, CompMgrFactory, ApplicationMgr) {
+  'unitary/core/ApplicationMgr',
+  'unitary/core/ContextMgr'
+], function(helpers, EventBusFactory, CompMgrFactory, ApplicationMgr, ContextMgr) {
 
   // build the Unitary namespace
   const eventbus = EventBusFactory(window);
@@ -55,6 +56,6 @@ define([
   }
 
   // fire the framework loaded event
-  window.postMessage({header: {type:'MGNT', broadcast:'FRAMEWORK'}, msg:'FRAMEWORK_LOADED', data: {}});
+//  window.postMessage({header: {type:'MGNT', broadcast:'FRAMEWORK'}, msg:'FRAMEWORK_LOADED', data: {}});
   return Object.assign({}, Unitary, {'name':'UnitaryDesktop'});
 });
