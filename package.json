@@ -1,0 +1,88 @@
+{
+  "name": "Unitary Client Framework",
+  "version": "1.0.0",
+  "homepage": "",
+  "license": "AGPL-3.0-only",
+  "description": "A framework for creating applications using modular components with enhanced security",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neomancy/unitary-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neomancy/unitary-client/issues"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "test": "gulp archive && mocha --require @babel/register --reporter spec --timeout 5000"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/register": "^7.10.1",
+    "apache-server-configs": "^4.0.0",
+    "archiver": "^4.0.1",
+    "chai": "^4.2.0",
+    "del": "^5.1.0",
+    "eslint": "^7.1.0",
+    "eslint-config-recommended": "^4.1.0",
+    "eslint-plugin-jasmine": "^4.1.1",
+    "eslint-plugin-mocha": "^7.0.1",
+    "eslint-plugin-requirejs": "^4.0.0",
+    "glob": "^7.1.6",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-eslint": "^6.0.0",
+    "gulp-header": "^2.0.9",
+    "gulp-load-plugins": "^2.0.3",
+    "gulp-rename": "^2.0.0",
+    "gulp-replace": "^1.0.0",
+    "karma-coverage": "^2.0.3",
+    "karma-jasmine-jquery": "^0.1.1",
+    "main.css": "2.1.0",
+    "mocha": "^7.2.0",
+    "modernizr": "3.11.2",
+    "normalize.css": "8.0.1",
+    "strip-json-comments": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=10",
+    "npm": ">=3"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "browserslist": [
+    "last 2 versions",
+    "Firefox ESR",
+    "IE 11"
+  ],
+  "h5bp-configs": {
+    "directories": {
+      "archive": "archive",
+      "dist": "dist",
+      "src": "src",
+      "test": "test"
+    }
+  },
+  "files": [
+  ],
+  "dependencies": {
+    "golden-layout": "^1.5.9",
+    "jasmine-jquery": "^2.1.1",
+    "karma": "^5.2.3",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-edge-launcher": "^0.4.2",
+    "karma-firefox-launcher": "^2.1.0",
+    "karma-jasmine": "^4.0.1",
+    "karma-jasmine-ajax": "^0.1.13",
+    "karma-notify-reporter": "^1.2.0",
+    "karma-requirejs": "^1.1.0",
+    "karma-summary-reporter": "^1.9.0",
+    "requirejs": "^2.3.6",
+    "requirejs-plugins": "^1.0.2",
+    "text": "github:requirejs/text"
+  }
+}
