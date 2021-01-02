@@ -6,27 +6,36 @@
 
 define(function() {
 
-  let CtxMgr = {
-    'data': {},
-    'exec': {}
+  let c_CtxReferences = {};
+  let CtxMgr = {};
+
+  // ---------------------------------------------------------------------------
+  CtxMgr.create = () => {
+    // creates a new context [APP ONLY]
+  };
+  CtxMgr.delete = (ctx_id, requestor) => {
+    // creates a new context [APP ONLY]
+  };
+  // ---------------------------------------------------------------------------
+  CtxMgr.list = () => {
+    // lists all contexts [APP ONLY]
+    return Object.keys(c_CtxReferences);
+  };
+  CtxMgr.contents = (ctx_id, requestor) => {
+    // lists the items within a given context
+    if (c_CtxReferences[ctx_id] === undefined) return false;
+    return c_CtxReferences[ctx_id].list(requestor);
+  };
+  // ---------------------------------------------------------------------------
+  CtxMgr.follow = (ctx_id, requestor, callback) => {
+    // register a callback to be triggered when there is changes to a context
+  };
+  CtxMgr.unfollow = (ctx_id, requestor) => {
+    // unregister a changes-to-context activated callback
   };
 
-  CtxMgr.data._ctx = {};
-  CtxMgr.data.ctxList = function() {
-    return Object.keys(CtxMgr.data._ctx);
-  };
-  CtxMgr.data.ctxAdd = function() {};
-  CtxMgr.data.ctxRemove = function(path) {};
-  CtxMgr.data.read = function(component, path) {};
-  CtxMgr.data.write = function(component, path) {};
 
 
-  CtxMgr.exec._ctx = {};
-  CtxMgr.exec.ctxList = function() {
-    return Object.keys(CtxMgr.exec._ctx);
-  };
-  CtxMgr.exec.ctxAdd = function() {};
-  CtxMgr.exec.ctxRemove = function() {};
 
 
   return CtxMgr;

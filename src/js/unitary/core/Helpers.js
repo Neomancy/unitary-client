@@ -7,6 +7,20 @@
 define([], function() {
   let helper = {};
 
+  helper.pool = [];
+
+  helper.generator = async function() {
+    while (helper.pool.length < 500) {
+      helper.pool.push(await helper.generateID());
+    }
+  };
+
+  setInterval(helper.generator, 50);
+
+  helper.popID = function() {
+    return helper.ID2String(helper.pool.pop());
+  };
+
   helper.generateID = async function generateID() {
     // Framework was designed assuming this function
     // is cryptographically secure to protect

@@ -79,61 +79,61 @@ define([
 
   DataContext.prototype = {
     constructor: DataContext,
-    aclElevatedAdd(requester, permissions) {
+    aclElevatedAdd(requestor, permissions) {
       /* expected object:
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcAdd(this._acl.elevated, permissions);
         return true;
       } else {
         return false;
       }
     },
-    aclElevatedDelete(requester, permissions) {
+    aclElevatedDelete(requestor, permissions) {
       /* expected object:
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcDelete(this._acl.elevated, permissions);
         return true;
       } else {
         return false;
       }
     },
-    aclNormalAdd(requester, permissions) {
+    aclNormalAdd(requestor, permissions) {
       /* expected object:
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcAdd(this._acl.normal, permissions);
         return true;
       } else {
         return false;
       }
     },
-    aclNormalDelete(requester, permissions) {
+    aclNormalDelete(requestor, permissions) {
       /* expected object:
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcDelete(this._acl.normal, permissions);
         return true;
       } else {
         return false;
       }
     },
-    aclGlobal(requester, boolObj) {
+    aclGlobal(requestor, boolObj) {
       /* expected object:
        *  {'read':True, 'write':false} OR
        *  {'read':True} OR
        *  {'write':false}
        */
-      if (requester == this._acl.owner || this._acl.elevated.permissions.includes(requester) === true) {
+      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         if (boolObj.read !== undefined && boolObj.read == true) {
           this._acl.global.read = true;
         } else {
@@ -150,9 +150,10 @@ define([
       }
     },
 
-    get(requester, path) {},
-    set(requester, path, value, acl = false ) {
-      /* requester - the requester ID
+    list(requestor) {},
+    get(requestor, path) {},
+    set(requestor, path, value, acl = false ) {
+      /* requestor - the requestor ID
        * path - the path for the variable of interest
        * value - what to set the variable of interest to
        * acl - object {'read':'pge', write:'e'}
@@ -161,8 +162,7 @@ define([
       // this._data
       return null;
     },
-    delete(requester, path) {},
-    curryPath(path) { /* returns a DataContextCurried object */}
+    delete(requestor, path) {},
 
   };
 
@@ -197,31 +197,31 @@ define([
 //     this.#ctx_id = funcUUID;
 //   }
 //
-//   aclElevatedAdd(requester, permissions) {
+//   aclElevatedAdd(requestor, permissions) {
 //     /* expected object:
 //      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
-//   aclElevatedDelete(requester, permissions) {
+//   aclElevatedDelete(requestor, permissions) {
 //     /* expected object:
 //      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
-//   aclGlobalAdd(requester, permissions) {
+//   aclGlobalAdd(requestor, permissions) {
 //     /* expected object:
 //      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
-//   aclGlobalDelete(requester, permissions) {
+//   aclGlobalDelete(requestor, permissions) {
 //     /* expected object:
 //      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
 //      *  lists can also contain strings for lib/component classes
 //      * */
 //   }
-//   aclPromiscuous(requester, boolObj) {
+//   aclPromiscuous(requestor, boolObj) {
 //     /* expected object:
 //      *  {'read':True, 'write':false} OR
 //      *  {'read':True} OR
@@ -230,16 +230,16 @@ define([
 //   }
 //
 //
-//   get(requester, path) {}
-//   set(requester, path, value, acl = false ) {
-//     /* requester - the requester ID
+//   get(requestor, path) {}
+//   set(requestor, path, value, acl = false ) {
+//     /* requestor - the requestor ID
 //      * path - the path for the variable of interest
 //      * value - what to set the variable of interest to
 //      * acl - object {'read':'pge', write:'e'}
 //      *     - where Promiscuous
 //      * */
 //   }
-//   delete(requester, path) {}
+//   delete(requestor, path) {}
 //
 //
 //   curry(path) { /* returns a DataContextCurried object */}
@@ -287,7 +287,7 @@ define([
  } while (false);
  return false;
  },
- _checkACL: function(requester, location, action) {
+ _checkACL: function(requestor, location, action) {
  return false;
  },
  */

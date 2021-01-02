@@ -12,6 +12,7 @@ define([
   let c_func_reply_listener = (event) => {
     let packet = event.data;
     if (packet.header.to !== 'AppStub') return;
+    if (packet.header.reply !== true) return;
     // TODO: lookup the transaction id and get the promise functions
     let promise_funcs = c_array_reply_transactions[packet.header.transaction];
     if (promise_funcs === undefined) return;
@@ -19,49 +20,49 @@ define([
 
     // TODO: process the message type
     switch (packet.header.action) {
-      case 'context:create<reply':
+      case 'context:create':
         if (packet.data !== false) {
           promise_funcs.resolve(packet.data);
         } else {
           promise_funcs.reject(false);
         }
         break;
-      case 'context:delete<reply':
+      case 'context:delete':
         if (packet.data !== false) {
           promise_funcs.resolve(packet.data);
         } else {
           promise_funcs.reject(false);
         }
         break;
-      case 'context:follow<reply':
+      case 'context:follow':
         if (packet.data !== false) {
           promise_funcs.resolve(packet.data);
         } else {
           promise_funcs.reject(false);
         }
         break;
-      case 'context:list<reply':
+      case 'context:list':
         if (packet.data !== false) {
           promise_funcs.resolve(packet.data);
         } else {
           promise_funcs.reject(false);
         }
         break;
-      case 'components:list<reply':
+      case 'components:list':
         if (packet.data !== false) {
           promise_funcs.resolve(packet.data);
         } else {
           promise_funcs.reject(false);
         }
         break;
-      case 'instances:list<reply':
+      case 'instances:list':
         if (packet.data !== false) {
           promise_funcs.resolve(packet.data);
         } else {
           promise_funcs.reject(false);
         }
         break;
-      case 'instances:delete<reply':
+      case 'instances:delete':
         if (packet.data !== false) {
           promise_funcs.resolve(packet.data);
         } else {
