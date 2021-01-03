@@ -73,8 +73,9 @@ define([
   };
 
 
-  return function(EventSource) {
+  return function(EventSource, EngineMediator) {
     let c_EventSource = EventSource;
+    let c_EngineMediator = EngineMediator;
     c_EventSource.addEventListener('message', c_func_reply_listener);
     return {
       layout: {
@@ -85,7 +86,7 @@ define([
         create: async (options) => { // creates a new context (Promise)
           // message {action: 'context:create', options:'data'}
           let myPromise = new Promise(async (resolve, reject) => {
-            let txid = helpers.ID2String(await helpers.generateID());
+            let txid = c_EngineMediator.getReference('Helpers').popID();
             c_array_reply_transactions[txid] = {resolve:resolve, reject:reject, expires: Date.now()+(120 * 1000)};
             c_EventSource.postMessage({
               header: {
@@ -102,7 +103,7 @@ define([
         delete: async (ctx_id) => {  // deletes a context
           // message {action: 'context:delete', ctxid: 'context_string'}
           let myPromise = new Promise(async (resolve, reject) => {
-            let txid = helpers.ID2String(await helpers.generateID());
+            let txid = c_EngineMediator.getReference('Helpers').popID();
             c_array_reply_transactions[txid] = {resolve:resolve, reject:reject, expires: Date.now()+(120 * 1000)};
             c_EventSource.postMessage({
               header: {
@@ -119,7 +120,7 @@ define([
         load: async (ctx_id) => { // loads a context given its InstanceID
           // message {action: 'context:follow', ctxid: 'context_string'}
           let myPromise = new Promise(async (resolve, reject) => {
-            let txid = helpers.ID2String(await helpers.generateID());
+            let txid = c_EngineMediator.getReference('Helpers').popID();
             c_array_reply_transactions[txid] = {resolve:resolve, reject:reject, expires: Date.now()+(120 * 1000)};
             c_EventSource.postMessage({
               header: {
@@ -136,7 +137,7 @@ define([
         list: async () => { // lists all contexts
           // message {action: 'context:list'}
           let myPromise = new Promise(async (resolve, reject) => {
-            let txid = helpers.ID2String(await helpers.generateID());
+            let txid = c_EngineMediator.getReference('Helpers').popID();
             c_array_reply_transactions[txid] = {resolve:resolve, reject:reject, expires: Date.now()+(120 * 1000)};
             c_EventSource.postMessage({
               header: {
@@ -155,7 +156,7 @@ define([
         listRegistered: async () => {
           // message {action:'components:list'}
           let myPromise = new Promise(async (resolve, reject) => {
-            let txid = helpers.ID2String(await helpers.generateID());
+            let txid = c_EngineMediator.getReference('Helpers').popID();
             c_array_reply_transactions[txid] = {resolve:resolve, reject:reject, expires: Date.now()+(120 * 1000)};
             c_EventSource.postMessage({
               header: {
@@ -172,7 +173,7 @@ define([
         listInstances: async () => {
           // message {action:'instances:list'}
           let myPromise = new Promise(async (resolve, reject) => {
-            let txid = helpers.ID2String(await helpers.generateID());
+            let txid = c_EngineMediator.getReference('Helpers').popID();
             c_array_reply_transactions[txid] = {resolve:resolve, reject:reject, expires: Date.now()+(120 * 1000)};
             c_EventSource.postMessage({
               header: {
@@ -189,7 +190,7 @@ define([
         deleteInstance: async (instance_id) => {
           // message {action:'instances:delete', instanceid: 'instance_string'}
           let myPromise = new Promise(async (resolve, reject) => {
-            let txid = helpers.ID2String(await helpers.generateID());
+            let txid = c_EngineMediator.getReference('Helpers').popID();
             c_array_reply_transactions[txid] = {resolve:resolve, reject:reject, expires: Date.now()+(120 * 1000)};
             c_EventSource.postMessage({
               header: {

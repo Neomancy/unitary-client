@@ -4,16 +4,13 @@
  * This code exists within the main window.
  */
 
-define([
-  'unitary/core/Helpers',
-  'unitary/core/EventBus'
-], function(helpers, EventBus) {
+define([], function() {
 
-  return function(EventBusInstance) {
+  return function(Mediator) {
     let ComponentMgr = {};
     let c_Components = {};
     let c_Instances = {};
-    let c_EventBus = EventBusInstance;
+    let c_EventBus = Mediator.getReference("EventBus");
 
     ComponentMgr.name = 'ComponentMgr';  // used by the logger subsystem
 
@@ -22,6 +19,10 @@ define([
         components: c_Components,
         instances: c_Instances
       }
+    };
+
+    ComponentMgr.init = function() {
+      console.warn("initialize event listener for ComponentManager");
     };
 
     // gets a valid component definition

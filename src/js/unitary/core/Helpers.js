@@ -17,6 +17,10 @@ define([], function() {
 
   setInterval(helper.generator, 50);
 
+  helper.init = function() {
+    helper.generator();
+  };
+
   helper.popID = function() {
     return helper.ID2String(helper.pool.pop());
   };

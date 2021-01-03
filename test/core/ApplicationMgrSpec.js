@@ -5,34 +5,17 @@
 
 describe('[ApplicationMgr Tests]', () => {
 
-  let c_helpers = null;
-  let c_AppMgrFtry = null;
-
-  beforeAll((done) => {
-    require([
-      'unitary/core/Engine',
-      'unitary/core/Helpers',
-      'unitary/core/ApplicationMgr'
-    ], (engine, helpers, AppMgr) => {
-
-      // create an iframe for use as a loopback
-      expect(engine).toBeDefined();
-      expect(helper).toBeDefined();
-      expect(component).toBeDefined();
-      c_AppMgrFtry = AppMgr;
-      c_helpers = helpers;
-      done();
-    });
-  });
+  let c_Mediator= null;
 
   // describe('[Display tests]', () => {
   // });
   describe('[Contexts tests]', () => {
     it('create', (done) => {
-      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers'], (AppMgrFtry, helpers) => {
-        let txn_id = helpers.popID();
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
+        let Mediator = MediatorFtry();
+        let txn_id = Helpers.popID();
         let mock_EventBus = {SendMessage: (packet) => {
-          expect(packet.data).not.toEqual("my-new-context-id");
+          expect(packet.data).toEqual("my-new-context-id");
           delete packet.data;
           expect(packet).toEqual({
             header: {
@@ -46,9 +29,12 @@ describe('[ApplicationMgr Tests]', () => {
           done();
         }};
         let mock_ContextMgr = {
-          create: () => {return new Promise((resolve) => { console.warn('run promise'); resolve("my-new-context-id")});}
-        }
-        let myAppMgr = AppMgrFtry(mock_EventBus, mock_ContextMgr);
+          create: () => {return new Promise((resolve) => { resolve("my-new-context-id")});}
+        };
+        Mediator.setReference('EventBus', mock_EventBus);
+        Mediator.setReference('ContextMgr', mock_ContextMgr);
+        Mediator.setReference('Helpers', Helpers);
+        let myAppMgr = AppMgrFtry(Mediator);
         myAppMgr.ReceiveMessage({
           header: {
             to: 'AppMgr',
@@ -59,18 +45,18 @@ describe('[ApplicationMgr Tests]', () => {
         });
       });
     });
-    it('delete', (done) => {
-      require(['unitary/core/ApplicationMgr'], (AppMgrFtry) => {
+    xit('delete', (done) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
         done();
       });
     });
-    it('follow', (done) => {
-      require(['unitary/core/ApplicationMgr'], (AppMgrFtry) => {
+    xit('follow', (done) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
         done();
       });
     });
-    it('list', (done) => {
-      require(['unitary/core/ApplicationMgr'], (AppMgrFtry) => {
+    xit('list', (done) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
         done();
       });
     });
@@ -78,31 +64,35 @@ describe('[ApplicationMgr Tests]', () => {
   describe('[Components tests]', () => {
     // TODO: There should also be a create widget
     xit('Create Widget', (done) => {
-      done();
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
+        done();
+      });
     });
     // TODO: There should also be a create library
     xit('Create Library', (done) => {
-      done();
-    });
-    it('List Components', (done) => {
-      require(['unitary/core/ApplicationMgr'], (AppMgrFtry) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
         done();
       });
     });
-    it('List Instances', (done) => {
-      require(['unitary/core/ApplicationMgr'], (AppMgrFtry) => {
+    xit('List Components', (done) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
         done();
       });
     });
-    it('Delete Instances', (done) => {
-      require(['unitary/core/ApplicationMgr'], (AppMgrFtry) => {
+    xit('List Instances', (done) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
+        done();
+      });
+    });
+    xit('Delete Instances', (done) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
         done();
       });
     });
   });
   describe('[Messages tests]', () => {
-    it('Send', (done) => {
-      require(['unitary/core/ApplicationMgr'], (AppMgrFtry) => {
+    xit('Send', (done) => {
+      require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
         done();
       });
     });

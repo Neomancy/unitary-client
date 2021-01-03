@@ -6,13 +6,22 @@
 
 define([], function() {
   c_references = {};
-  return {
-    setReference: (name, reference) => {
-      c_references[name] = reference;
-    },
-    getReference: (name) => {
-      return c_references[name];
-    }
+  return function() {
+    return {
+      setReference: (name, reference) => {
+        c_references[name] = reference;
+      },
+      getReference: (name) => {
+        return c_references[name];
+      },
+      initializeAll: () => {
+        for (let idx in c_references) {
+          if (typeof c_references[idx].init === 'function') {
+            c_references[idx].init();
+          }
+        }
+      }
+    };
   };
 });
 

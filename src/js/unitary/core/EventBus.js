@@ -4,20 +4,17 @@
  * This code exists within the main window.
  */
 
-define([
-  'unitary/core/Helpers'
-], function(helpers) {
+define([], function(helpers) {
 
-  return function(window_ref, app_mgr_ref, comp_mgr_ref) {
-    const c_ApplicationMgr = app_mgr_ref;
-    const c_ComponentMgr = comp_mgr_ref;
+  return function(window_ref, Mediator) {
+    const c_ApplicationMgr = Mediator.getReference("ApplicationMgr");
+    const c_ComponentMgr = Mediator.getReference("ComponentMgr");
     let EventBus = {};
     let c_SourceInstances = {};
     let c_BroadcastGroups = {};
     let c_TransactionMsgs = {};
 
     EventBus.name = 'EventBus';  // used by the logger subsystem
-
 
     EventBus.debug = function() {
       EventBus.debug = {
@@ -46,7 +43,7 @@ define([
         }
       }
       // address if the event came from an unregistered source
-      if (sender_info === null && event.source !== c_window_reference) {
+      if (sender_info === null) {
         // log message from unregistered senders as a security violation
         console.dir(sender_info);
         console.warn('Log/report message from unregistered source!');
@@ -55,6 +52,9 @@ define([
 
       // handle the message routing
       const msg_object = event.data;
+      // TODO: Develop event bus sniffer functionality
+      // c_window_reference.dispatchEvent(new CustomEvent('promiscuous', {detail: {packet: msg_object, actual_sender: sender_info.id}}));
+
       if (msg_object.header === undefined) return null;
       if (msg_object.header.to !== undefined && c_SourceInstances[msg_object.header.to] === undefined) {
         // log message to unregistered sources as a execution problem
@@ -84,13 +84,23 @@ define([
         // see if the transaction exists already in store, if not then add it
       }
 
-      if (msg_object.header.from === "APP") console.warn("process message from APP")
+      // TODO: Forward events to framework modules
+      c_window_reference.dispatchEvent(new CustomEvent('framework', {detail: {packet: msg_object, actual_sender: sender_info.id}}));
+
+      if (msg_object.header.from === "AppStub") console.warn("process message from AppStub")
       // -------------------- </Event Listener> --------------------
     });
 
     EventBus.RegisterSource = (event_source_ref, instance_id) => {
-      c_SourceInstances[instance_id] = {source_ref: event_source_ref};
+      c_SourceInstances[instance_id] = {id:instance_id, source_ref: event_source_ref};
     };
+
+    // EventBus.RegisterBroadcastSubscriber = function(address, subscriber_id){
+    //   if (c_SourceInstances[subscriber_id] === undefined) return false;
+    // };
+    // EventBus.UnregisterBroadcastSubscriber = function(address, ){
+    //   if (c_BroadcastGroups[subscriber_id] === undefined) return false;
+    // };
 
     EventBus.packetize = (to_instance, from_instance, msg_type, message, transaction_id) => {
       let ret = {
@@ -149,6 +159,28 @@ define([
       });
       return send_promise;
     };
+
+    EventBus.sendBroadcast = (packet) => {
+      // sends a simplex one-way message to a broadcast group
+      const send_promise = new Promise(async (resolve, reject) => {
+        // find the destination
+        let dest_info = c_funcGetDestination(packet);
+        if (dest_info === null) {
+          reject({status: 'ERROR', message: 'No or invalid Broadcast/To address specified!'});
+        }
+        // SEND MESSAGEs
+        for (let dest_idx in dest_info) {
+          let source_rec = c_SourceInstances[dest_info[dest_idx]];
+          if (source_rec !== undefined && source_rec.source_ref !== undefined) {
+            source_rec.source_ref.postMessage(packet);
+          }
+        }
+        resolve({status: 'OK'});
+      });
+      return send_promise;
+    };
+
+
 
     return EventBus;
   }
