@@ -10,7 +10,7 @@ define([], function() {
     let ComponentMgr = {};
     let c_Components = {};
     let c_Instances = {};
-    let c_EventBus = Mediator.getReference("EventBus");
+    let c_mediator = Mediator;
 
     ComponentMgr.name = 'ComponentMgr';  // used by the logger subsystem
 
@@ -80,7 +80,7 @@ define([], function() {
       if (component_info.isWidget === false) throw new Error('ComponentMgr.CreateWidgetInstance: Component_id is not of widget type');
       // TODO: see if widget is a singleton that is already instanciated, return that instance if so
 
-      let instance_id = helpers.ID2String(await helpers.generateID());
+      let instance_id = c_mediator.getReference('Helpers').popID();
       // clone and fill in unspecified default values and save result to closure storage
       // TODO: make this assignment be more specific in copying over info from the component record
       c_Instances[instance_id] = Object.assign({}, component_info, {
@@ -100,7 +100,7 @@ define([], function() {
       c_Instances[instance_id].src_window = iframe.contentWindow;
 
       // register the component with the EventBus
-      c_EventBus.RegisterSource(c_Instances[instance_id].src_window, instance_id);
+      c_mediator.getReference('EventBus').RegisterSource(c_Instances[instance_id].src_window, instance_id);
 
       // TODO: Confirm this... used to load the scripts in the Component's sandbox
       let scripts = [

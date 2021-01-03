@@ -84,7 +84,7 @@ define([
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
+      if (requestor == "APP" || requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcAdd(this._acl.elevated, permissions);
         return true;
       } else {
@@ -96,7 +96,7 @@ define([
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
+      if (requestor == "APP" || requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcDelete(this._acl.elevated, permissions);
         return true;
       } else {
@@ -108,7 +108,7 @@ define([
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
+      if (requestor == "APP" || requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcAdd(this._acl.normal, permissions);
         return true;
       } else {
@@ -120,7 +120,7 @@ define([
        *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
        *  lists can also contain strings for lib/component classes
        * */
-      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
+      if (requestor == "APP" || requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         closure_funcDelete(this._acl.normal, permissions);
         return true;
       } else {
@@ -133,7 +133,7 @@ define([
        *  {'read':True} OR
        *  {'write':false}
        */
-      if (requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
+      if (requestor == "APP" || requestor == this._acl.owner || this._acl.elevated.permissions.includes(requestor) === true) {
         if (boolObj.read !== undefined && boolObj.read == true) {
           this._acl.global.read = true;
         } else {
@@ -150,8 +150,26 @@ define([
       }
     },
 
-    list(requestor) {},
-    get(requestor, path) {},
+    list(requestor) {
+      if (requestor == "APP" ||
+          requestor == this._acl.owner ||
+          this._acl.elevated.read.includes(requestor) === true ||
+          this._acl.normal.read.includes(requestor) === true ||
+          this._acl.global.read === true)
+      {
+        console.error("list the paths within this context");
+      }
+    },
+    get(requestor, path) {
+      if (requestor == "APP" ||
+        requestor == this._acl.owner ||
+        this._acl.elevated.read.includes(requestor) === true ||
+        this._acl.normal.read.includes(requestor) === true ||
+        this._acl.global.read === true)
+      {
+        console.error("read the given path within this context");
+      }
+    },
     set(requestor, path, value, acl = false ) {
       /* requestor - the requestor ID
        * path - the path for the variable of interest
@@ -159,10 +177,26 @@ define([
        * acl - object {'read':'pge', write:'e'}
        *     - where Promiscuous
        * */
-      // this._data
+      if (requestor == "APP" ||
+        requestor == this._acl.owner ||
+        this._acl.elevated.write.includes(requestor) === true ||
+        this._acl.normal.write.includes(requestor) === true ||
+        this._acl.global.write === true)
+      {
+        console.error("write to the given path within this context");
+      }
       return null;
     },
-    delete(requestor, path) {},
+    delete(requestor, path) {
+      if (requestor == "APP" ||
+        requestor == this._acl.owner ||
+        this._acl.elevated.write.includes(requestor) === true ||
+        this._acl.normal.write.includes(requestor) === true ||
+        this._acl.global.write === true)
+      {
+        console.error("delete the given path within this context");
+      }
+    }
 
   };
 
@@ -170,124 +204,3 @@ define([
     'DataContext': DataContext
   };
 });
-
-//let hlpr = require(['../core/helpers']);
-// class DataContext {
-//   #acl;
-//   #ctx_id;
-//   constructor(uuidOwner, funcUUID) {
-//     this.#acl = {
-//       'owner': uuidOwner,
-//       'promiscuous': {
-//         'read': false,
-//         'write': false
-//       },
-//       'elevated': {
-//         'read': [ /* ids of components/libraries with access */ ],
-//         'write': [ /* ids of components/libraries with access */ ],
-//         'permissions': [ /* ids of components/libraries able to change ACL permissions */ ]
-//       },
-//       'global': {
-//         'read': [ /* ids of components/libraries with access */ ],
-//         'write': [ /* ids of components/libraries with access */ ]
-//       }
-//     };
-//
-//     // create a unique and cryptographically secure ID
-//     this.#ctx_id = funcUUID;
-//   }
-//
-//   aclElevatedAdd(requestor, permissions) {
-//     /* expected object:
-//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
-//      *  lists can also contain strings for lib/component classes
-//      * */
-//   }
-//   aclElevatedDelete(requestor, permissions) {
-//     /* expected object:
-//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
-//      *  lists can also contain strings for lib/component classes
-//      * */
-//   }
-//   aclGlobalAdd(requestor, permissions) {
-//     /* expected object:
-//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
-//      *  lists can also contain strings for lib/component classes
-//      * */
-//   }
-//   aclGlobalDelete(requestor, permissions) {
-//     /* expected object:
-//      *  {'read':[List of instance IDs], 'write':[List of instance IDs]}
-//      *  lists can also contain strings for lib/component classes
-//      * */
-//   }
-//   aclPromiscuous(requestor, boolObj) {
-//     /* expected object:
-//      *  {'read':True, 'write':false} OR
-//      *  {'read':True} OR
-//      *  {'write':false}
-//      */
-//   }
-//
-//
-//   get(requestor, path) {}
-//   set(requestor, path, value, acl = false ) {
-//     /* requestor - the requestor ID
-//      * path - the path for the variable of interest
-//      * value - what to set the variable of interest to
-//      * acl - object {'read':'pge', write:'e'}
-//      *     - where Promiscuous
-//      * */
-//   }
-//   delete(requestor, path) {}
-//
-//
-//   curry(path) { /* returns a DataContextCurried object */}
-// }
-
-
-
-/*
- _getLocation: function(location) {
- let parts = location.split('.');
- let path = [];
- let ref = undefined;
- while (parts.length > 0) {
- let t = parts.shift();
- path.push(t);
- }
- return {last_ref:ref, navigated:path.join('.'), unnavigated:parts.join('.'), found:(ref !== undefined)};
-
- do {
- let t = parts.shift();
- path.push(t);
- let pathkey = path.join('.');
- if (locs.indexOf(pathkey) > -1) {
- // found the path record
- let ref = this._data[pathkey];
- while (parts.length > 0 || !Number.isNaN(array_index)) {
- // handle any array index
- let array_index = parts_index[parts.length - 1];
- if (!Number.isNaN(array_index)) {
- // array requested by path object
- if (!Array.isArray(ref)) return false;
- if (ref[array_index] === undefined) return {found: false};
- ref = ref[array_index]
- }
- // sub item by path object
- let sub_path_key = path.shift();
- if (ref[sub_path_key] === undefined) return {found: false};
- ref = ref[sub_path_key];
- }
- // full path processed, exit
- if (parts.length == 0) return ref;
- }
- // break out if it is an index and was not found
- if (!Number.isNaN(parts_index[parts.length - 1])) break;
- } while (false);
- return false;
- },
- _checkACL: function(requestor, location, action) {
- return false;
- },
- */

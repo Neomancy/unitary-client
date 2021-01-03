@@ -10,11 +10,17 @@ define(function() {
   let CtxMgr = {};
 
   // ---------------------------------------------------------------------------
+  CtxMgr.init = () => {
+    console.warn("initialize the module to listen for framework events");
+  }
   CtxMgr.create = () => {
     // creates a new context [APP ONLY]
   };
   CtxMgr.delete = (ctx_id, requestor) => {
-    // creates a new context [APP ONLY]
+    // deletes a given context [APP ONLY]
+    if (c_CtxReferences[ctx_id] === undefined) return false;
+    delete c_CtxReferences[ctx_id];
+    // TODO: Broadcast that a change has occurred
   };
   // ---------------------------------------------------------------------------
   CtxMgr.list = () => {

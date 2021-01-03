@@ -45,19 +45,117 @@ describe('[ApplicationMgr Tests]', () => {
         });
       });
     });
-    xit('delete', (done) => {
+    it('delete', (done) => {
       require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
-        done();
+        let Mediator = MediatorFtry();
+        let txn_id = Helpers.popID();
+        let ctx_id = "my-existing-context-id";
+        let mock_EventBus = {SendMessage: (packet) => {
+          expect(packet.data).toEqual(ctx_id);
+          delete packet.data;
+          expect(packet).toEqual({
+            header: {
+              to: 'AppStub',
+              from: 'AppMgr',
+              action: 'context:delete',
+              reply: true,
+              transaction: txn_id
+            }
+          });
+          done();
+        }};
+        let mock_ContextMgr = {
+          delete: (id) => {return new Promise((resolve) => {
+            expect(id).toEqual(ctx_id);
+            resolve("my-existing-context-id")});
+          }
+        };
+        Mediator.setReference('EventBus', mock_EventBus);
+        Mediator.setReference('ContextMgr', mock_ContextMgr);
+        Mediator.setReference('Helpers', Helpers);
+        let myAppMgr = AppMgrFtry(Mediator);
+        myAppMgr.ReceiveMessage({
+          header: {
+            to: 'AppMgr',
+            from: 'AppStub',
+            action: 'context:delete',
+            transaction: txn_id
+          }, data: ctx_id
+        });
       });
     });
-    xit('follow', (done) => {
+    it('follow', (done) => {
       require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
-        done();
+        let Mediator = MediatorFtry();
+        let txn_id = Helpers.popID();
+        let ctx_id = "my-existing-context-id";
+        let mock_EventBus = {SendMessage: (packet) => {
+          expect(packet.data).toEqual(ctx_id);
+          delete packet.data;
+          expect(packet).toEqual({
+            header: {
+              to: 'AppStub',
+              from: 'AppMgr',
+              action: 'context:follow',
+              reply: true,
+              transaction: txn_id
+            }
+          });
+          done();
+        }};
+        let mock_ContextMgr = {
+          follow: (id) => {return new Promise((resolve) => {
+            expect(id).toEqual(ctx_id);
+            resolve(ctx_id)});
+          }
+        };
+        Mediator.setReference('EventBus', mock_EventBus);
+        Mediator.setReference('ContextMgr', mock_ContextMgr);
+        Mediator.setReference('Helpers', Helpers);
+        let myAppMgr = AppMgrFtry(Mediator);
+        myAppMgr.ReceiveMessage({
+          header: {
+            to: 'AppMgr',
+            from: 'AppStub',
+            action: 'context:follow',
+            transaction: txn_id
+          }, data: ctx_id
+        });
       });
     });
-    xit('list', (done) => {
+    it('list', (done) => {
       require(['unitary/core/ApplicationMgr', 'unitary/core/Helpers', 'unitary/core/EngineMediator'], (AppMgrFtry, Helpers, MediatorFtry) => {
-        done();
+        let Mediator = MediatorFtry();
+        let txn_id = Helpers.popID();
+        let mock_EventBus = {SendMessage: (packet) => {
+          expect(packet.data).toEqual("my-existing-context-id");
+          delete packet.data;
+          expect(packet).toEqual({
+            header: {
+              to: 'AppStub',
+              from: 'AppMgr',
+              action: 'context:list',
+              reply: true,
+              transaction: txn_id
+            }
+          });
+          done();
+        }};
+        let mock_ContextMgr = {
+          list: () => {return new Promise((resolve) => { resolve("my-existing-context-id")});}
+        };
+        Mediator.setReference('EventBus', mock_EventBus);
+        Mediator.setReference('ContextMgr', mock_ContextMgr);
+        Mediator.setReference('Helpers', Helpers);
+        let myAppMgr = AppMgrFtry(Mediator);
+        myAppMgr.ReceiveMessage({
+          header: {
+            to: 'AppMgr',
+            from: 'AppStub',
+            action: 'context:list',
+            transaction: txn_id
+          }, data: null
+        });
       });
     });
   });
