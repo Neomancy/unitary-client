@@ -6,7 +6,7 @@
 
 The Unitary Desktop is single-page application and framework used to build
 modular applications from disparate components.  Unitary Desktop focuses
-heavily on security doing things such as execution sandboxing, controlled 
+heavily on security, doing things such as execution sandboxing, controlled 
 communication, and automated logging. 
 
 ## Quick start
